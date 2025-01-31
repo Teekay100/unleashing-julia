@@ -16,60 +16,61 @@ macro bind(def, element)
     #! format: on
 end
 
-# ╔═╡ 1ce6658d-d960-436f-9d1a-d4449a4623a4
+# ╔═╡ 847bece3-386f-4725-b6e4-e8ae2364cc28
+using PlutoUI
+
+# ╔═╡ ad39d283-1ccd-4596-aee4-aa3c371de094
+using Plots  # This will install plots
+
+# ╔═╡ 75395c05-673d-460f-997e-9fea92570e43
 begin
 	using DataFrames
 	using CSV
 end
 
-# ╔═╡ b4f998d3-5a21-44a9-9230-474ee190487b
-using Plots  # This will install plots
-
-# ╔═╡ 7b7b30a1-9ac9-4248-bea3-30289469e671
-using PlutoUI
-
-# ╔═╡ 656e6e1f-4795-4486-a1fa-2656756b0c93
-df = CSV.read("WHO-COVID-19-global-data.csv", DataFrame)
-
-# ╔═╡ 9d846eea-ab1d-4cfa-8d46-9eaf36034fcf
-df.Country_code === df[!, "Country_code"]
-
-# ╔═╡ aad7e358-d4f0-420a-b9e9-e601c730a695
-equals_sg(x::AbstractString) = x == "SG"
-
-# ╔═╡ 7633da10-abab-455a-905a-b3f54646ec64
-sg_data = filter(:Country_code => equals_sg, df)
-
-# ╔═╡ 5cc703df-05cd-4dc9-bbed-6ee4a5e20d56
-dates = sg_data[!, "Date_reported"]
-
-# ╔═╡ f9c5eecc-ee06-4534-9c7a-eded36053c49
-cumulative_cases = sg_data[!, "Cumulative_cases"]
-
-# ╔═╡ 403bb6ea-b857-4256-814e-6a0a913851a0
-cumulative_data_plotted_over_date = plot(dates, cumulative_cases)
-
-# ╔═╡ 5f252952-6e39-4c85-a9aa-8e47571fd414
-plot!(cumulative_data_plotted_over_date, title="Singapore COVID-19 Cases 2020-2025", xlabel="Dates", ylabel="Cumulative Number of Cases")
-
-# ╔═╡ 2d2b2343-5ecf-4845-9691-8d021c697a56
+# ╔═╡ 5aefa493-6404-4771-8fa8-f1691e105c4e
 @bind slider_value Slider(0:10:1000)
 
-# ╔═╡ 4b1c5c6d-0597-49f7-af16-c586dea90fca
+# ╔═╡ 3142615b-831e-4456-93dd-a289c0f8a7c4
 md"""
 ### Slider Value Now At $(slider_value)
 """
 
-# ╔═╡ 1d631f6b-e638-4bdb-ad93-ed2997ef7942
+# ╔═╡ 7deb55f9-53ef-49bb-ab3a-dc2671c44460
+equals_sg(x::AbstractString) = x == "SG"
+
+# ╔═╡ 306beae2-6685-4411-bbfd-8e8f8b43c731
+df = CSV.read("WHO-COVID-19-global-data.csv", DataFrame)
+
+# ╔═╡ d3cc187d-d550-4f95-8760-abce240d176a
+sg_data = filter(:Country_code => equals_sg, df)
+
+# ╔═╡ f6dee58c-88c8-4b8c-8297-72481ee01f57
+cumulative_cases = sg_data[!, "Cumulative_cases"]
+
+# ╔═╡ 9c8e420f-2a36-4dfe-a794-1066278c6c63
+dates = sg_data[!, "Date_reported"]
+
+# ╔═╡ 576c78ad-ca8f-4d93-b802-0da6feeabe1b
 @bind date_slider_index Slider(1:length(dates))
 
-# ╔═╡ 006fbfb6-26ed-4d48-9f7b-03aa4dd0493f
+# ╔═╡ f62ece96-f391-4d7c-8f7f-fa8d2e3caf71
+new_plot = plot(dates[date_slider_index:end], cumulative_cases[date_slider_index:end], title="Singapore COVID-19 Cases 2020-2025", xlabel="Dates", ylabel="Cumulative Number of Cases")
+
+# ╔═╡ 8cf60b07-8105-48f4-8932-02416f636575
 md"""
 ### The date is now $(dates[date_slider_index])
 """
 
-# ╔═╡ 8d65447e-449f-41bc-9e78-fa028ce08d95
-new_plot = plot(dates[date_slider_index:end], cumulative_cases[date_slider_index:end], title="Singapore COVID-19 Cases 2020-2025", xlabel="Dates", ylabel="Cumulative Number of Cases")
+# ╔═╡ d4aaf8ae-47ba-4ff3-9d26-beda02afc01d
+cumulative_data_plotted_over_date = plot(dates, cumulative_cases)
+
+# ╔═╡ a173c7a8-f215-42ef-84a0-6711f1757336
+plot!(cumulative_data_plotted_over_date, title="Singapore COVID-19 Cases 2020-2025", xlabel="Dates", ylabel="Cumulative Number of Cases")
+
+
+# ╔═╡ 6f8234fb-64a7-433e-b9da-725031be1518
+df.Country_code === df[!, "Country_code"]
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1369,21 +1370,21 @@ version = "1.4.1+2"
 """
 
 # ╔═╡ Cell order:
-# ╠═1ce6658d-d960-436f-9d1a-d4449a4623a4
-# ╠═656e6e1f-4795-4486-a1fa-2656756b0c93
-# ╠═9d846eea-ab1d-4cfa-8d46-9eaf36034fcf
-# ╠═aad7e358-d4f0-420a-b9e9-e601c730a695
-# ╠═7633da10-abab-455a-905a-b3f54646ec64
-# ╠═5cc703df-05cd-4dc9-bbed-6ee4a5e20d56
-# ╠═f9c5eecc-ee06-4534-9c7a-eded36053c49
-# ╠═b4f998d3-5a21-44a9-9230-474ee190487b
-# ╠═403bb6ea-b857-4256-814e-6a0a913851a0
-# ╠═5f252952-6e39-4c85-a9aa-8e47571fd414
-# ╠═7b7b30a1-9ac9-4248-bea3-30289469e671
-# ╠═2d2b2343-5ecf-4845-9691-8d021c697a56
-# ╠═4b1c5c6d-0597-49f7-af16-c586dea90fca
-# ╠═1d631f6b-e638-4bdb-ad93-ed2997ef7942
-# ╠═006fbfb6-26ed-4d48-9f7b-03aa4dd0493f
-# ╠═8d65447e-449f-41bc-9e78-fa028ce08d95
+# ╠═f62ece96-f391-4d7c-8f7f-fa8d2e3caf71
+# ╠═8cf60b07-8105-48f4-8932-02416f636575
+# ╠═576c78ad-ca8f-4d93-b802-0da6feeabe1b
+# ╠═3142615b-831e-4456-93dd-a289c0f8a7c4
+# ╠═5aefa493-6404-4771-8fa8-f1691e105c4e
+# ╠═847bece3-386f-4725-b6e4-e8ae2364cc28
+# ╠═a173c7a8-f215-42ef-84a0-6711f1757336
+# ╠═d4aaf8ae-47ba-4ff3-9d26-beda02afc01d
+# ╠═ad39d283-1ccd-4596-aee4-aa3c371de094
+# ╠═f6dee58c-88c8-4b8c-8297-72481ee01f57
+# ╠═9c8e420f-2a36-4dfe-a794-1066278c6c63
+# ╠═d3cc187d-d550-4f95-8760-abce240d176a
+# ╠═7deb55f9-53ef-49bb-ab3a-dc2671c44460
+# ╠═6f8234fb-64a7-433e-b9da-725031be1518
+# ╠═306beae2-6685-4411-bbfd-8e8f8b43c731
+# ╠═75395c05-673d-460f-997e-9fea92570e43
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
